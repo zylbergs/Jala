@@ -49,7 +49,9 @@ def trans_samhar():
         .agg({'weight':'sum','size':'mean','updated_at':'max','selling_price':'sum'})
     #standardize weigth metric
     har_agg['avg_weight_har'] = 1000/har_agg['size']
-    sam_har = har_agg.merge(sam,how='left',on='cycle_id',suffixes=('_har','_sam'))\
+
+    #merge 
+    sam_har = sam.merge(har_agg,how='outer',on='cycle_id',suffixes=('_sam','_har'))\
         .drop(columns=['created_at','updated_at_sam','updated_at_har','id','remark'])
     
     return sam_har

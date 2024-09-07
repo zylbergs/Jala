@@ -49,8 +49,8 @@ def feature_store(gen_version=True):
     # fill features.morning_pH with percentile 50
     features.morning_pH.fillna(features.morning_pH.quantile(0.5), inplace=True)
 
-    # fill features.average_weight with percentile 50
-    features.average_weight.fillna(features.average_weight.quantile(0.5), inplace=True)
+    # fill features.last_sampled_weight with percentile 50
+    features.last_sampled_weight.fillna(features.last_sampled_weight.quantile(0.5), inplace=True)
 
     # fill features.selling_price with percentile 50
     features.selling_price.fillna(features.selling_price.quantile(0.5), inplace=True)
@@ -68,19 +68,15 @@ def feature_store(gen_version=True):
     # List of column names
     to_drop = [
         "started_at",
-        "hatchery_name",
         "mnt_tz",
         "timezone",
         "sampled_at",
         "finished_at",
         "h_tz",
-        "hatchery_id",
         "weight",
-        "remark",
         "size",
         "created_at",
         "updated_at",
-        "remark",
         "created_at",
         "updated_at",
         "limit_weight_per_area",
@@ -94,11 +90,14 @@ def feature_store(gen_version=True):
         "province",
         "regency",
         "pond_id",
-        "ordered_at",
-        "pond_name"
+        "ordered_at"
     ]
-    features = features.drop(columns=to_drop)
+    features["total_biocunt"] = features["size"] * features["weight"]
+    features["survival_rate"] = features["total_biocunt"] / features["total_seed"]
+    # fill na avg_growth_rate with features['size']/features['cyc_dur']
+    features["avg_growth_rate"] = features["avg_growth_rate"].fillna(features['size']/features['cyc_dur'])
     features['generated_date'] = datetime.datetime.now()
+    features = features.drop(columns=to_drop)
     # write versioning features
 
     if gen_version:

@@ -26,4 +26,5 @@ def trans_cycle():
     cyc['cyc_dur'] = cyc['cyc_dur'].str.split(' ').str[0]
     cyc['cyc_dur'] = cyc['cyc_dur'].astype(int)
     cyc.rename(columns={'id':'cycle_id'},inplace=True)
+    cyc.drop(columns=['remark','hatchery_id','hatchery_name','pond_name'],inplace=True)
     return cyc

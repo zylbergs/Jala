@@ -7,11 +7,15 @@ def trans_samhar():
     sam = pd.read_csv(r"Source\Data\samplings.csv")
     #sampling + harvest transform
     #manual correction w/ assum on created_at date
+    sam = pd.read_csv(r"Source\Data\samplings.csv")
+    #sampling + harvest transform
+    #manual correction w/ assum on created_at date
     sam.loc[sam.sampled_at == '1-01-01','sampled_at'] = '2023-10-12'
 
     sam.updated_at = pd.to_datetime(sam.updated_at,format="%Y-%m-%d %H:%M:%S")
-    sam.sampled_at = pd.to_datetime(sam.sampled_at,format="%Y-%m-%d")
     sam.created_at = pd.to_datetime(sam.created_at,format="%Y-%m-%d %H:%M:%S")
+    sam["sampled_at"] = sam["sampled_at"].fillna(sam["created_at"].dt.date)
+    sam.sampled_at = pd.to_datetime(sam.sampled_at,format="%Y-%m-%d")
 
     sam.average_weight = sam.average_weight.astype(float)
     sam.id = sam.id.astype(str)
@@ -25,6 +29,8 @@ def trans_samhar():
     sam.drop_duplicates(subset='id',keep='last',inplace=True)
     #get cycle last sample
     sam.sort_values(by=['cycle_id','sampled_at'],inplace=True)
+    sam['avg_growth_rate'] = sam.groupby('cycle_id')['average_weight'].diff().fillna(0)
+    sam.rename(columns={'average_weight':'last_sampled_weight'},inplace=True)
     sam.drop_duplicates(subset='cycle_id',keep='last',inplace=True)
 
     har.id = har.id.astype(str)
@@ -53,5 +59,8 @@ def trans_samhar():
     #merge 
     sam_har = sam.merge(har_agg,how='outer',on='cycle_id',suffixes=('_sam','_har'))\
         .drop(columns=['created_at','updated_at_sam','updated_at_har','id','remark'])
+    
+    #fillna average weight with last sampled weight
+    sam_har['avg_weight_har'] = sam_har['avg_weight_har'].fillna(sam_har['last_sampled_weight'])
     
     return sam_har

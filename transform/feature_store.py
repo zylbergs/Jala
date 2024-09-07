@@ -49,15 +49,6 @@ def feature_store(gen_version=True):
     # fill features.morning_pH with percentile 50
     features.morning_pH.fillna(features.morning_pH.quantile(0.5), inplace=True)
 
-    # fill features.last_sampled_weight with percentile 50
-    features.last_sampled_weight.fillna(features.last_sampled_weight.quantile(0.5), inplace=True)
-
-    # fill features.selling_price with percentile 50
-    features.selling_price.fillna(features.selling_price.quantile(0.5), inplace=True)
-
-    # fill features.avg_weight_har with percentile 50
-    features.avg_weight_har.fillna(features.avg_weight_har.quantile(0.5), inplace=True)
-
     # fill features.pond_length with percentile 50
     features.pond_length.fillna(features.pond_length.quantile(0.5), inplace=True)
 

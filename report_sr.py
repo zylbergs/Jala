@@ -11,7 +11,7 @@ def gen_report_sr():
     #report directory
     rep_dir = r'.\report'
     #get the latest feature file
-    filename = os.listdir(r'.\feature')[0]
+    filename = os.listdir(r'.\feature')[-1]
     df = pd.read_parquet(r'.\feature\{}'.format(filename))
     #export survival rate and avg daily growth rate
     df[df.survival_rate.notnull()][['cycle_id','survival_rate','avg_growth_rate']]\

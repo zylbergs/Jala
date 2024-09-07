@@ -64,8 +64,6 @@ def feature_store(gen_version=True):
         "sampled_at",
         "finished_at",
         "h_tz",
-        "weight",
-        "size",
         "created_at",
         "updated_at",
         "created_at",

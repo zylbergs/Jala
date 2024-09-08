@@ -35,10 +35,27 @@ if st.button("Generate Report"):
     with st.spinner("Generating report..."):
         report = gen_report_sr()
         st.success("Report generated successfully!")
+        with open("Report\SR_ADG_CYCLE.xlsx", "rb") as file:
+            btn = st.download_button(
+                label="Download Report",
+                data=file,
+                file_name="report.xlsx",
+                mime="application/vnd.ms-excel"
+            )
         st.write(report)
 
 # Button to download the report
         st.download_button("Download Report", data="Report\SR_ADG_CYCLE.xlsx", file_name="SR_ADG_CYCLE.xlsx")
+
+#
+st.write("Download Template Data for prediction")
+with open("devs\X_test.xlsx", "rb") as file:
+  btn = st.download_button(
+    label="Download Template",
+    data=file,
+    file_name="template.xlsx",
+    mime="application/vnd.ms-excel"
+  )
 
 st.write("[ML MODEL] predict biomass")
 # Create a file uploader
@@ -52,8 +69,18 @@ if uploaded_file is not None:
     with open(r"model_repo\biomass\model_biomass_version_20240907233653.pkl", 'rb') as file:
         model = pickle.load(file)
     prediction = predict_biomass(test_data, model)
+    
+    test_data['prediction'] = prediction
+    test_data.to_excel("prediction.xlsx", index=False)
 
-    st.write(prediction)
+    with open("prediction.xlsx", "rb") as file:
+        btn = st.download_button(
+            label="Download Result",
+            data=file,
+            file_name="prediction.xlsx",
+            mime="application/vnd.ms-excel"
+        )
+        st.write(prediction)
 
 st.write("[ML MODEL] predict SR")
 # Create a file uploader
@@ -68,7 +95,17 @@ if uploaded_file2 is not None:
         model = pickle.load(file)
     prediction = predict_biomass(test_data, model)
 
-    st.write(prediction)
+    test_data['prediction'] = prediction
+    test_data.to_excel("prediction.xlsx", index=False)
+
+    with open("prediction.xlsx", "rb") as file:
+        btn = st.download_button(
+            label="Download Result",
+            data=file,
+            file_name="prediction.xlsx",
+            mime="application/vnd.ms-excel"
+        )
+        st.write(prediction)
 
 st.write("[ML MODEL] predict sell price")
 # Create a file uploader
@@ -83,7 +120,17 @@ if uploaded_file3 is not None:
         model = pickle.load(file)
     prediction = predict_biomass(test_data, model)
 
-    st.write(prediction)
+    test_data['prediction'] = prediction
+    test_data.to_excel("prediction.xlsx", index=False)
+
+    with open("prediction.xlsx", "rb") as file:
+        btn = st.download_button(
+            label="Download Result",
+            data=file,
+            file_name="prediction.xlsx",
+            mime="application/vnd.ms-excel"
+        )
+        st.write(prediction)
 
 st.write("[ML MODEL] predict average harvest weight")
 # Create a file uploader
@@ -97,8 +144,17 @@ if uploaded_file4 is not None:
     with open(r"model_repo\avg_harvest\model_avghar_version_20240907232920.pkl", 'rb') as file:
         model = pickle.load(file)
     prediction = predict_biomass(test_data, model)
+    test_data['prediction'] = prediction
+    test_data.to_excel("prediction.xlsx", index=False)
 
-    st.write(prediction)
+    with open("prediction.xlsx", "rb") as file:
+        btn = st.download_button(
+            label="Download Result",
+            data=file,
+            file_name="prediction.xlsx",
+            mime="application/vnd.ms-excel"
+        )
+        st.write(prediction)
 # Add text at the bottom of the page
 st.write("Made with ❤️ by kevin")
 
